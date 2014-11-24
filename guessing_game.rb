@@ -3,7 +3,7 @@ require 'active_support/inflector'
 
 class GuessingGame
   def initialize
-    @count = 0
+    @count = 1
     @computer_guess = rand(1..100)
   end
 
@@ -13,6 +13,7 @@ class GuessingGame
   end
 
   def round
+    puts @computer_guess
     print "Your guess : "
     human_guess = gets.chomp.to_i
     outcome(human_guess, @computer_guess)
@@ -21,17 +22,37 @@ class GuessingGame
 
   def outcome(human_guess, computer_guess) #directions are smaller or bigger
     if computer_guess == human_guess
-      win && play_again
-    elsif @count >= 5
-      lose
+      win
+    elsif human_guess < 1 || human_guess > 100
+      input_error
     elsif computer_guess > human_guess # bigger
       bigger
     elsif computer_guess < human_guess # smaller
       smaller
-    else
-      puts "You made an illegal move, guess again."
-      @count -= 1
-      round
+    end
+  end
+
+  def guesses_remaining
+    lose if @count >= 5
+    puts "You have #{5 - @count} #{'guess'.pluralize(5 - @count)} left." if @count < 5
+    @count += 1
+    round
+  end
+
+  def input_error
+    puts "Please guess a number between 1 and 100."
+    @count -= 1
+    round
+  end
+
+  def play_again
+    puts "would you like to play again? (y/n)"
+    responce = gets.chomp
+    if responce == 'y'
+      GuessingGame.new.play
+    elsif responce == 'n'
+      puts "thanks for playing"
+      exit
     end
   end
 
@@ -54,6 +75,7 @@ class GuessingGame
     puts "**       WINNER       **"
     puts "**                    **"
     puts "************************"
+    play_again
   end
 
   def lose
@@ -62,6 +84,7 @@ class GuessingGame
     puts "**      GAME OVER     **"
     puts "**                    **"
     puts "************************"
+    play_again
   end
 
   def bigger
@@ -90,23 +113,6 @@ class GuessingGame
     puts "||         \\/         ||"
     puts "========================"
   end
-
-  def guesses_remaining
-    @count += 1
-    puts "You have #{5 - @count} #{'guess'.pluralize(5 - @count)} left." if @count < 5
-    round
-  end
 end
 
 GuessingGame.new.play
-
-# def play_again
-#   puts "would you like to play again? (y/n)"
-#   responce = gets.chomp
-#   if responce == 'y'
-#     GuessingGame.new.play
-#   elsif responce == 'n'
-#     puts "thanks for playing"
-#     exit
-#   end
-# end
