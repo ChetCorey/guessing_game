@@ -7,32 +7,16 @@ class GuessingGame
     @computer_guess = rand(1..100)
   end
 
+  def play
+    intro
+    round
+  end
+
   def round
-    puts "I am thinking of a number between 1 and 100 \nYou have get 5 guesses. Whats your first guess?" if @count == 0
+    print "Your guess : "
     human_guess = gets.chomp.to_i
     outcome(human_guess, @computer_guess)
     guesses_remaining
-  end
-
-  def play_again
-    puts "would you like to play again? (y/n)"
-    responce = gets.chomp
-    if responce == 'y'
-      initialize
-    elsif responce == 'n'
-      puts "thanks for playing"
-      exit
-    end
-  end
-
-  def win
-    puts "You got it in #{@count} guesses."
-    play_again
-  end
-
-  def lose
-    puts "GAME OVER\nThe answer was : #{@computer_guess}"
-    play_again
   end
 
   def outcome(human_guess, computer_guess) #directions are smaller or bigger
@@ -40,10 +24,10 @@ class GuessingGame
       win && play_again
     elsif @count >= 5
       lose
-    elsif computer_guess < human_guess # smaller
-      puts "make a\n    __\ns  |  |\nm  |  |\na  |  |\nl__|  |__\nl\\      /\ne \\    /\nr  \\  /\n    \\/\nguess"
     elsif computer_guess > human_guess # bigger
-      puts "Make A\n    /\\\nB  /  \\\nI /    \\\nG/__  __\\\nR  |  |\nE  |  |\nR  |  |\n   |__|\nGUESS"
+      bigger
+    elsif computer_guess < human_guess # smaller
+      smaller
     else
       puts "You made an illegal move, guess again."
       @count -= 1
@@ -51,12 +35,78 @@ class GuessingGame
     end
   end
 
+  def intro
+    puts "********************************************************************"
+    puts "**                                                                **"
+    puts "**                    WELCOME TO GUESSING GAME                    **"
+    puts "**                         by: Chet Corey                         **"
+    puts "**                                                                **"
+    puts "**             Guess my number it is between 1 and 100            **"
+    puts "**                   I am giving you 5 chances                    **"
+    puts "**                    Whats your first guess?                     **"
+    puts "**                                                                **"
+    puts "********************************************************************"
+  end
+
+  def win
+    puts "************************"
+    puts "**                    **"
+    puts "**       WINNER       **"
+    puts "**                    **"
+    puts "************************"
+  end
+
+  def lose
+    puts "************************"
+    puts "**                    **"
+    puts "**      GAME OVER     **"
+    puts "**                    **"
+    puts "************************"
+  end
+
+  def bigger
+    puts "========================"
+    puts "||    guess bigger    ||"
+    puts "||         /\\         ||"
+    puts "||        /  \\        ||"
+    puts "||       /    \\       ||"
+    puts "||      /__  __\\      ||"
+    puts "||        |  |        ||"
+    puts "||        |  |        ||"
+    puts "||        |__|        ||"
+    puts "========================"
+  end
+
+  def smaller
+    puts "========================"
+    puts "||    guess smaller   ||"
+    puts "||         __         ||"
+    puts "||        |  |        ||"
+    puts "||        |  |        ||"
+    puts "||      __|  |__      ||"
+    puts "||      \\      /      ||"
+    puts "||       \\    /       ||"
+    puts "||        \\  /        ||"
+    puts "||         \\/         ||"
+    puts "========================"
+  end
+
   def guesses_remaining
-    puts "You have #{5 - @count} #{'guess'.pluralize(5 - @count)} left." if @count < 5
     @count += 1
+    puts "You have #{5 - @count} #{'guess'.pluralize(5 - @count)} left." if @count < 5
     round
   end
 end
 
-play = GuessingGame.new
-play.round
+GuessingGame.new.play
+
+# def play_again
+#   puts "would you like to play again? (y/n)"
+#   responce = gets.chomp
+#   if responce == 'y'
+#     GuessingGame.new.play
+#   elsif responce == 'n'
+#     puts "thanks for playing"
+#     exit
+#   end
+# end
